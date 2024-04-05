@@ -6,7 +6,7 @@ tags
 *.orig
 __debug_bin
 
-# Editor
+# Editor.
 *.swp
 .idea/
 .vscode/
