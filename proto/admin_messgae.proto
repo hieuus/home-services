@@ -1,0 +1,8 @@
+syntax = "proto3";
+package home_services.v1;
+
+message HealthzRequest {}
+
+message HealthzResponse {
+  string message = 1;
+}

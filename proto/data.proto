@@ -1,0 +1,5 @@
+syntax = "proto3";
+package home_services.v1;
+
+
+import "validate/validate.proto";

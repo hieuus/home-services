@@ -1,0 +1,18 @@
+syntax = "proto3";
+package home_services.v1;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "user_message.proto";
+
+service HomeServicesUserService {
+  rpc UserHealthz(UserHealthzRequest) returns (UserHealthzResponse) {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      tags: "User",
+    };
+    option (google.api.http) = {
+      get: "/user/healthz"
+    };
+  }
+}
