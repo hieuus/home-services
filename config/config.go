@@ -19,6 +19,7 @@ type Config struct {
 type Base struct {
 	Environment string
 	Server      ServerConfig `yaml:"server" mapstructure:"server"`
+	Postgres    *Postgres    `yaml:"postgres" mapstructure:"postgres"`
 }
 
 // ServerConfig hold http/grpc server config
@@ -34,6 +35,19 @@ type ServerAddress struct {
 
 func (s *ServerAddress) String() string {
 	return fmt.Sprintf("%s:%d", s.Host, s.Port)
+}
+
+type Postgres struct {
+	Host     string `yaml:"host" mapstructure:"host"`
+	Port     int    `yaml:"port" mapstructure:"port"`
+	Database string `yaml:"database" mapstructure:"database"`
+	Username string `yaml:"username" mapstructure:"username"`
+	Password string `yaml:"password" mapstructure:"password"`
+}
+
+func (m *Postgres) FormatDSN() string {
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Ho_Chi_Minh",
+		m.Host, m.Username, m.Password, m.Database, m.Port)
 }
 
 func Load() *Config {

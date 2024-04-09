@@ -3,7 +3,9 @@ package services
 import (
 	"context"
 	"github.com/hieuus/home-services/config"
+	"github.com/hieuus/home-services/internal/repositories"
 	pb "github.com/hieuus/home-services/pb"
+	"github.com/rs/zerolog"
 )
 
 type serviceInterface interface {
@@ -13,7 +15,9 @@ type serviceInterface interface {
 var _ serviceInterface = &Service{}
 
 type Service struct {
-	cfg *config.Config
+	log  zerolog.Logger
+	cfg  *config.Config
+	repo repositories.Repository
 }
 
 func (s *Service) UserHealthz(ctx context.Context, request *pb.UserHealthzRequest) (*pb.UserHealthzResponse, error) {
@@ -24,6 +28,14 @@ func (s *Service) Healthz(ctx context.Context, request *pb.HealthzRequest) (*pb.
 	return &pb.HealthzResponse{Message: "OK"}, nil
 }
 
-func New(cfg *config.Config) *Service {
-	return &Service{cfg: cfg}
+func New(
+	log zerolog.Logger,
+	cfg *config.Config,
+	repo repositories.Repository,
+) *Service {
+	return &Service{
+		log:  log,
+		cfg:  cfg,
+		repo: repo,
+	}
 }

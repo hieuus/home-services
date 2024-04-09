@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/hieuus/home-services/config"
+	"github.com/hieuus/home-services/internal/must"
+	"github.com/hieuus/home-services/internal/repositories/postgres"
 	"github.com/hieuus/home-services/internal/services"
 	pb "github.com/hieuus/home-services/pb"
 
@@ -21,9 +23,12 @@ func run(_ []string) error {
 
 	l := ll.New()
 	cfg := config.Load()
-	grpcMux := runtime.NewServeMux()
+	db := must.ConnectPostgres(cfg.Postgres)
+	repo := postgres.New(l, cfg, db)
 
-	service := services.New(cfg)
+	service := services.New(l, cfg, repo)
+
+	grpcMux := runtime.NewServeMux()
 	if err := registerWithMuxServer(ctx, grpcMux, service); err != nil {
 		return err
 	}
