@@ -26,3 +26,13 @@ migrate-up:
 migrate-down:
 		migrate -path migrations -database "postgresql://$(USER):$(PASSWORD)@$(HOST):$(PORT)/$(DATABASE)?sslmode=disable" -verbose down
 .PHONY: migration-down
+
+proto:
+	rm -f pb/*.go
+	rm -f docs/*.swagger.json
+	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+	--go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
+	--openapiv2_out=docs --openapiv2_opt=allow_merge=true,merge_file_name=home_services \
+	proto/*.proto
+	statik -src=./docs -dest=./docs/ui
